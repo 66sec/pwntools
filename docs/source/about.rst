@@ -1,56 +1,44 @@
-About pwntools
+关于 pwntools
 ========================
 
-Whether you're using it to write exploits, or as part
-of another software project will dictate how you use it.
+你可以用他来编写exploits，或者作为你其他软件项目的一部分，这取决你怎么使用他。
 
-Historically pwntools was used as a sort of exploit-writing DSL. Simply doing
-``from pwn import *`` in a previous version of pwntools would bring all sorts of
-nice side-effects.
+以前pwntools被当成编写exploits的通用范式。在以前的版本中通过``from pwn import *`` 
+就可以导入一系列功能库。
 
-When redesigning pwntools for 2.0, we noticed two contrary goals:
 
-* We would like to have a "normal" python module structure, to allow other
-  people to familiarize themselves with pwntools quickly.
-* We would like to have even more side-effects, especially by putting the
-  terminal in raw-mode.
+在编写2.0版本的pwntools的时候，我们考虑了两个对立的目标：
 
-To make this possible, we decided to have two different modules. :mod:`pwnlib`
-would be our nice, clean Python module, while :mod:`pwn` would be used during
-CTFs.
 
-:mod:`pwn` --- Toolbox optimized for CTFs
+* 我们想要一个很Python范的模块结构，让其他人容易理解代码结构以致能快速上手。
+* 我们也想他能更加便捷，能像终端编辑一样便捷。
+
+为此，我们决定分成两个不同的模块。:mod:`pwnlib`是我们python规范化模块, 而:mod:`pwn` 
+主要服务于我们的CTF选手。
 -----------------------------------------
 
 .. module:: pwn
 
-As stated, we would also like to have the ability to get a lot of these
-side-effects by default. That is the purpose of this module. It does
-the following:
-
-* Imports everything from the toplevel :mod:`pwnlib` along with
-  functions from a lot of submodules. This means that if you do
-  ``import pwn`` or ``from pwn import *``, you will have access to
-  everything you need to write an exploit.
-* Calls :func:`pwnlib.term.init` to put your terminal in raw mode
+像前面说的那样，我们这个模块有更多默认的效果，这是我们设计这个模块的初衷。
+这个模块主要完成一下事项：
+* 从顶层模块:mod:`pwnlib`导入所有函数集。这意味着无论你用
+  ``import pwn`` 或者 ``from pwn import *``，你都可以导入所有你想要的模块。
+* 调用 :函数:`pwnlib.term.init` to put your terminal in raw mode
   and implements functionality to make it appear like it isn't.
 * Setting the :data:`pwnlib.context.log_level` to `"info"`.
 * Tries to parse some of the values in :data:`sys.argv` and every
   value it succeeds in parsing it removes.
 
-:mod:`pwnlib` --- Normal python library
+:mod:`pwnlib` --- 规范化Python库
 ---------------------------------------
 
 .. module:: pwnlib
 
-This module is our "clean" python-code. As a rule, we do not think that
-importing :mod:`pwnlib` or any of the submodules should have any significant
-side-effects (besides e.g. caching).
+这个模块是我规范的Python代码。 我们不认为导入:模块:`pwnlib` 或者是其他认识子模块
+要有附加的效果。
 
-For the most part, you will also only get the bits you import. You for instance
-not get access to :mod:`pwnlib.util.packing` simply by doing ``import
-pwnlib.util``.
+你导入什么就只能使用什么。 比如你简单的用``import
+pwnlib.util``是不会导入`pwnlib.util.packing`模块的。
 
-Though there are a few exceptions (such as :mod:`pwnlib.shellcraft`), that does
-not quite fit the goals of being simple and clean, but they can still be
-imported without implicit side-effects.
+尽管有一些细微的模块 (such as :mod:`pwnlib.shellcraft`), 不太符合我们简单规范的要求,但是他们
+还是能没有附加导入效果而被使用。
